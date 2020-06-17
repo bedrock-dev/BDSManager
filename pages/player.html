@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>玩家数据</title>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/4.7.0/echarts-en.common.min.js"></script>
+</head>
+<body>
+<h1>Test JQ </h1>
+<div id="timeLine" style="width: 500px;height:500px;"></div>
+<script>
+
+    let playerTimeLine = echarts.init(document.getElementById('timeLine'));
+    $(document).ready(function () {
+        console.log("/timeLine?id=" + getQueryString('id'));
+        $.get("/timeLine?id=" + getQueryString('id')).done(data => {
+            playerTimeLine.setOption({
+                toolbox: {
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: false
+                        },
+                        saveAsImage: {
+                            pixelRatio: 3
+                        }
+                    }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                grid: {
+                    bottom: 90
+                },
+                dataZoom: [{
+                    type: 'inside'
+                }, {
+                    type: 'slider'
+                }],
+                xAxis: {
+                    data: data.date,
+                    silent: false,
+                },
+                yAxis: {
+                    splitArea: {
+                        show: false
+                    }
+                },
+
+                series: [{
+                    barWidth: '101%',
+                    type: 'bar',
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(
+                            0, 0, 0, 1,
+                            [
+                                {offset: 0, color: '#83bff6'},
+                                {offset: 0.5, color: '#188df0'},
+                                {offset: 1, color: '#188df0'}
+                            ]
+                        )
+                    },
+                    data: data.time,
+                    large: true
+                }]
+            });
+
+
+        });
+
+
+    });
+
+    function getQueryString(name) {
+        const query = decodeURI(window.location.search.substring(1));
+        const vars = query.split("&");
+        for (let i = 0; i < vars.length; i++) {
+            const pair = vars[i].split("=");
+            if (pair[0] === name) {
+                return pair[1];
+            }
+        }
+        return "";
+    }
+</script>
+</body>
+</html>

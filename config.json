@@ -1,0 +1,18 @@
+{
+  "serverName": "SAC",
+  "serverPath": "C:/Users/xhy/Desktop/mc-server/bedrock-server-1.14.21.0/",
+  "serverStartTime": "2019-06-12",
+  "serverPlatform": "Windows",
+  "dbFileName": "./data.db",
+
+  "autoBackup": true,
+  "backupCycle": 3,
+
+  "enableWeb": true,
+  "webRunCommand": false,
+  "webShowStartTime": true,
+  "webPermission": "all",
+  "webPassword": 121313,
+  "port": 80
+
+}

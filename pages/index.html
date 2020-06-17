@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to SAC</title>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+</head>
+<style>
+    #banner {
+        width: 100%;
+    }
+
+    body {
+        margin: -1px;
+    }
+
+
+    .header {
+        z-index: 3;
+        width: 100%;
+        height: 80px;
+        background: white;
+        position: fixed;
+        box-shadow:0 2px 5px #333333;
+        display: flex;
+        justify-content:space-between;
+        align-items:center;
+    }
+
+    .main-title{
+        padding: 0 100px;
+        font-size: 30px;
+        font-weight: bold;
+    }
+
+    .rel-data{
+        padding: 0 10px;
+        font-size: 25px;
+        text-decoration: none;
+        color: white;
+    }
+    button{
+        background-color: #188df0;
+        height: 60px;
+    }
+    input{
+        height: 60px;
+        width: 200px;
+    }
+</style>
+<body>
+<div class="header">
+    <p class="main-title">SAC server</p>
+<!--    <label>-->
+<!--        <input id="pass" type="password" placeholder="password">-->
+<!--    </label>-->
+    <button  id="data" class="rel-data">相关数据</button>
+<!--    <button id="manage" class="rel-data">后台管理</button>-->
+</div>
+</body>
+<script>
+    function topNavScroll() {
+        const topScroll = Math.floor($(window).scrollTop());
+        const scrollDist = 180;
+        if(topScroll > 0){
+            $('.header').css('color','black');
+            $('.rel-data').css('color','black');
+        }else {
+            $('.header').css('color','white');
+            $('.rel-data').css('color','white');
+        }
+        if (topScroll <= scrollDist) {
+            const p = topScroll / scrollDist;
+            $('.header').css('background-color', "rgba(255,255,255," + 4*  topScroll / scrollDist + ")");
+
+        } else {
+            $('.header ').css('background-color', "rgba(255,255,255)");
+        }
+    }
+
+    $(window).on('scroll', function () {
+        topNavScroll();
+    });
+
+    $(document).ready(function () {
+        $('#data').click(()=>{window.location.href = '/data'});
+        $('#manage').click(()=>{window.location.href='/manager'});
+    });
+</script>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>服务器数据查询</title>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/4.7.0/echarts-en.common.min.js"></script>
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        .panel {
+            margin: 10px;
+            padding: 3px;
+            width: 100%;
+            box-shadow: 0 2px 5px #333333;
+            border-radius: 3px;
+        }
+
+        .panel-title {
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .left {
+            width: 20%;
+            float: left;
+
+        }
+
+        .right {
+            width: 75%;
+            float: right;
+        }
+
+        ul {
+        }
+    </style>
+</head>
+<body>
+<div class="left">
+    <div class="inServer panel">
+        <p class="panel-title">当前在线玩家</p>
+        <ul id="inServer"></ul>
+    </div>
+    <div class="whitelist panel">
+        <p class="panel-title">服务器白名单</p>
+        <ul id="whitelist"></ul>
+    </div>
+</div>
+<div class="right">
+    <div class="panel">
+        <p id="allTime" class="panel-title"></p>
+    </div>
+    <div class="panel">
+        <p class="panel-title">今日最佳</p>
+        <button id="pre">前一天</button>
+        <button id="next">后一天</button>
+        <div id="todayCount" style="width: 50%;height:500px;"></div>
+    </div>
+</div>
+<script>
+    function getDayCountData(dayOff) {
+        const url = '/todayCount?offset=' + dayOff;
+        $.get(url).done(function (data) {
+            todayCount.setOption(
+                {
+                    color: ['#3398DB'],
+                    grid: {
+                        left: '5%',
+                        right: '5%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    yAxis: {
+                        type: 'category',
+                        data: data.players
+                    },
+                    xAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        data: data.times,
+                        type: 'bar'
+                    }]
+                }
+            );
+        });
+    }
+
+    const todayCount = echarts.init(document.getElementById('todayCount'));
+    let offset = 0;
+    $(document).ready(function () {
+        getDayCountData(offset);
+        $.get("/inServer", (data) => {
+            $.each(data, (index) => {
+                $('#inServer').append('<ul><a href="/player?id=' +
+                    data[index] + '">' +
+                    data[index] + '</a></ul>');
+            });
+        });
+
+        $.get("/allTime").done(data => {
+            $("#allTime").text("All PlayerTime: " + data + "h");
+        });
+        $.get("/whiteList", (data) => {
+            $.each(data, (index) => {
+                $('#whitelist').append('<ul><a href="/player?id=' +
+                    data[index].name + '">' +
+                    data[index].name + '</a></ul>');
+            });
+        });
+        $('#next').click(function () {
+            if (offset !== 0) {
+                --offset;
+                getDayCountData(offset)
+            }
+        });
+        $('#pre').click(function () {
+            ++offset;
+            getDayCountData(offset)
+        });
+    });
+</script>
+</body>
+</html>
